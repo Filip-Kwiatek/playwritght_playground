@@ -23,7 +23,7 @@ test.describe("User login to DemoBank", () => {
     );
   });
 
-  test.only("Unsuccessful login with invalid credentials - password too short", async ({
+  test("Unsuccessful login with invalid credentials - password too short", async ({
     page,
   }) => {
     await page.goto("https://demo-bank.vercel.app/index.html");
