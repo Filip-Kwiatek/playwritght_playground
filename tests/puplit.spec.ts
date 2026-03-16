@@ -2,18 +2,32 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Puplit test", () => {
   test("quick payment with correct data", async ({ page }) => {
-    await page.goto("https://demo-bank.vercel.app/index.html");
-    await page.getByTestId("login-input").fill("tester12");
-    await page.getByTestId("password-input").fill("12312312");
+    //Arrange
+    const url = "https://demo-bank.vercel.app/index.html";
+    const userId = "tester12";
+    const userPassword = "12312312";
+
+    const receiverId = "2";
+    const transferAmount = "120";
+    const transferTitle = "szmeks";
+    const expectedTransferReceiver = "Chuck Demobankowy";
+
+    // Act
+    await page.goto(url);
+    await page.getByTestId("login-input").fill(userId);
+    await page.getByTestId("password-input").fill(userPassword);
     await page.getByTestId("login-button").click();
-    await page.locator("#widget_1_transfer_receiver").selectOption("2");
-    await page.locator("#widget_1_transfer_amount").fill("120");
-    await page.locator("#widget_1_transfer_title").fill("szmeks");
+
+    await page.locator("#widget_1_transfer_receiver").selectOption(receiverId);
+    await page.locator("#widget_1_transfer_amount").fill(transferAmount);
+    await page.locator("#widget_1_transfer_title").fill(transferTitle);
+
     await page.getByRole("button", { name: "wykonaj" }).click();
     // await page.locator('#execute_btn').click();
     await page.getByTestId("close-button").click();
+    // Assert
     await expect(page.locator("#show_messages")).toHaveText(
-      "Przelew wykonany! Chuck Demobankowy - 120,00PLN - szmeks",
+      `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,
     );
     // await expect(page.getByRole("link", { name: "Przelew wykonany! Chuck" })).toBeVisible();
   });
@@ -22,11 +36,14 @@ test.describe("Puplit test", () => {
     await page.getByTestId("login-input").fill("tester12");
     await page.getByTestId("password-input").fill("12312312");
     await page.getByTestId("login-button").click();
+
     await page.locator("#widget_1_topup_receiver").selectOption("500 xxx xxx");
     await page.locator("#widget_1_topup_amount").fill("40");
     await page.getByText("zapoznałem się z regulaminem").click();
     await page.getByRole("button", { name: "doładuj telefon" }).click();
-    await expect(page.locator("#show_messages")).toHaveText("Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx",);
+    await expect(page.locator("#show_messages")).toHaveText(
+      "Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx",
+    );
     // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
     await page.getByTestId("close-button").click();
   });
