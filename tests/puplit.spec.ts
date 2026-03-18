@@ -32,19 +32,30 @@ test.describe("Puplit test", () => {
     // await expect(page.getByRole("link", { name: "Przelew wykonany! Chuck" })).toBeVisible();
   });
   test("successful mobile top-up with correct data", async ({ page }) => {
-    await page.goto("https://demo-bank.vercel.app/index.html");
-    await page.getByTestId("login-input").fill("tester12");
-    await page.getByTestId("password-input").fill("12312312");
+    // Arrange
+    const url = "https://demo-bank.vercel.app/index.html";
+    const userId = "tester12";
+    const userPassword = "12312312";
+
+    const expectedTopUpReceiver = "500 xxx xxx";
+    const topUpAmount = "40";
+
+    // Act
+    await page.goto(url);
+    await page.getByTestId("login-input").fill(userId);
+    await page.getByTestId("password-input").fill(userPassword);
     await page.getByTestId("login-button").click();
 
-    await page.locator("#widget_1_topup_receiver").selectOption("500 xxx xxx");
-    await page.locator("#widget_1_topup_amount").fill("40");
+    await page
+      .locator("#widget_1_topup_receiver")
+      .selectOption(expectedTopUpReceiver);
+    await page.locator("#widget_1_topup_amount").fill(topUpAmount);
     await page.getByText("zapoznałem się z regulaminem").click();
     await page.getByRole("button", { name: "doładuj telefon" }).click();
-    await expect(page.locator("#show_messages")).toHaveText(
-      "Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx",
-    );
+
+    // Assert
     // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
+    await expect(page.locator("#show_messages")).toHaveText(`Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`,);
     await page.getByTestId("close-button").click();
   });
 });
