@@ -44,7 +44,7 @@ test.describe("User login to DemoBank", () => {
   }) => {
     // Arrange
     const url = "https://demo-bank.vercel.app/index.html";
-    const userId = "estes";
+    const userId = "tester12";
     const badPassword = "123123";
     const expectedErrorMessage = "hasło ma min. 8 znaków";
 

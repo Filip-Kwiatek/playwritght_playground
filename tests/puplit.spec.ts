@@ -39,6 +39,7 @@ test.describe("Puplit test", () => {
 
     const expectedTopUpReceiver = "500 xxx xxx";
     const topUpAmount = "40";
+    const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
 
     // Act
     await page.goto(url);
@@ -55,7 +56,7 @@ test.describe("Puplit test", () => {
 
     // Assert
     // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
-    await expect(page.locator("#show_messages")).toHaveText(`Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`,);
+    await expect(page.locator("#show_messages")).toHaveText(expectedMessage);
     await page.getByTestId("close-button").click();
   });
 });
