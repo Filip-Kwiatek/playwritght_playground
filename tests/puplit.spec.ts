@@ -3,23 +3,23 @@ import { test, expect } from "@playwright/test";
 test.describe("Puplit test", () => {
   test.beforeEach(async ({ page }) => {
     const url = "https://demo-bank.vercel.app/index.html";
-    await page.goto(url);
-  });
-  test("quick payment with correct data", async ({ page }) => {
-    //Arrange
     const userId = "tester12";
     const userPassword = "12312312";
 
+    await page.goto(url);
+
+    await page.getByTestId("login-input").fill(userId);
+    await page.getByTestId("password-input").fill(userPassword);
+    await page.getByTestId("login-button").click();
+  });
+  test("quick payment with correct data", async ({ page }) => {
+    //Arrange
     const receiverId = "2";
     const transferAmount = "120";
     const transferTitle = "szmeks";
     const expectedTransferReceiver = "Chuck Demobankowy";
 
     // Act
-    await page.getByTestId("login-input").fill(userId);
-    await page.getByTestId("password-input").fill(userPassword);
-    await page.getByTestId("login-button").click();
-
     await page.locator("#widget_1_transfer_receiver").selectOption(receiverId);
     await page.locator("#widget_1_transfer_amount").fill(transferAmount);
     await page.locator("#widget_1_transfer_title").fill(transferTitle);
@@ -35,18 +35,11 @@ test.describe("Puplit test", () => {
   });
   test("successful mobile top-up with correct data", async ({ page }) => {
     // Arrange
-    const userId = "tester12";
-    const userPassword = "12312312";
-
     const expectedTopUpReceiver = "500 xxx xxx";
     const topUpAmount = "40";
     const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
 
     // Act
-    await page.getByTestId("login-input").fill(userId);
-    await page.getByTestId("password-input").fill(userPassword);
-    await page.getByTestId("login-button").click();
-
     await page
       .locator("#widget_1_topup_receiver")
       .selectOption(expectedTopUpReceiver);
