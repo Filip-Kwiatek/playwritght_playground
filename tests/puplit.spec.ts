@@ -2,11 +2,10 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Puplit test", () => {
   test.beforeEach(async ({ page }) => {
-    const url = "https://demo-bank.vercel.app/index.html";
     const userId = "tester12";
     const userPassword = "12312312";
 
-    await page.goto(url);
+    await page.goto('/');
 
     await page.getByTestId("login-input").fill(userId);
     await page.getByTestId("password-input").fill(userPassword);
