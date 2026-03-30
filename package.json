@@ -7,7 +7,8 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:watch": "playwright test --watch"
+    "test:watch": "playwright test --watch",
+    "test:puplit:headed": "npm run test tests/puplit.spec.ts -- --headed"
   },
   "keywords": [],
   "author": "",
