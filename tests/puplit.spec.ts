@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
+import { loginData } from "../test-data/login.data";
 
 test.describe("Puplit test", () => {
   test.beforeEach(async ({ page }) => {
-    const userId = "tester12";
-    const userPassword = "12312312";
+    const userId = loginData.userId;
+    const userPassword = loginData.userPassword;
 
     await page.goto("/");
 
