@@ -16,7 +16,7 @@ test.describe("Payment test", () => {
     await loginPage.loginButton.click();
     await page.getByRole("link", { name: "płatności" }).click();
   });
-  test.only("simple payment", async ({ page }) => {
+  test("simple payment", async ({ page }) => {
     // Arrange
     const exportReceiver = "Jan Nowak";
     const transferAccount = "12 3456 7890 1234 5678 9012 34568";
@@ -29,13 +29,8 @@ test.describe("Payment test", () => {
     await paymentPage.transferAmount.fill(transferAmount);
     await paymentPage.paymentButton.click();
     await paymentPage.paymentCloseButton.click();
-    // await page.getByTestId("transfer_receiver").fill(exportReceiver);
-    // await page.getByTestId("form_account_to").fill(transferAccount);
-    // await page.getByTestId("form_amount").fill(transferAmount);
-    // await page.getByRole("button", { name: "wykonaj przelew" }).click();
-    // await page.getByTestId("close-button").click();
 
     // Assert
-    await expect(page.locator("#show_messages")).toHaveText(expectedMessage);
+    await expect(paymentPage.paymentText).toHaveText(expectedMessage);
   });
 });

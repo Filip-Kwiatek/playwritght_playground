@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { loginData } from "../test-data/login.data";
 import { LoginPage } from "../pages/login.page";
+import { PuplitPage } from "../pages/puplit.page";
 
 test.describe("Puplit test", () => {
   test.beforeEach(async ({ page }) => {
@@ -14,7 +15,7 @@ test.describe("Puplit test", () => {
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
   });
-  test("quick payment with correct data", async ({ page }) => {
+  test.only("quick payment with correct data", async ({ page }) => {
     //Arrange
     const receiverId = "2";
     const transferAmount = "120";
@@ -22,17 +23,16 @@ test.describe("Puplit test", () => {
     const expectedTransferReceiver = "Chuck Demobankowy";
 
     // Act
-    await page.locator("#widget_1_transfer_receiver").selectOption(receiverId);
-    await page.locator("#widget_1_transfer_amount").fill(transferAmount);
-    await page.locator("#widget_1_transfer_title").fill(transferTitle);
+    const puplitPage = new PuplitPage(page);
+    await puplitPage.transferReceiver.selectOption(receiverId);
+    await puplitPage.transferAmount.fill(transferAmount);
+    await puplitPage.transferTitle.fill(transferTitle);
 
-    await page.getByRole("button", { name: "wykonaj" }).click();
-    // await page.locator('#execute_btn').click();
-    await page.getByTestId("close-button").click();
+    await puplitPage.executreTransferButton.click();
+    await puplitPage.closeButton.click();
+
     // Assert
-    await expect(page.locator("#show_messages")).toHaveText(
-      `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,
-    );
+    await expect(puplitPage.textShowMessages).toHaveText(`Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,);
     // await expect(page.getByRole("link", { name: "Przelew wykonany! Chuck" })).toBeVisible();
   });
   test("successful mobile top-up with correct data", async ({ page }) => {
@@ -42,12 +42,15 @@ test.describe("Puplit test", () => {
     const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
 
     // Act
-    await page
-      .locator("#widget_1_topup_receiver")
-      .selectOption(expectedTopUpReceiver);
-    await page.locator("#widget_1_topup_amount").fill(topUpAmount);
+    const puplitPage = new PuplitPage(page);
+    puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
+    puplitPage.widgetTopUpAmount.fill(topUpAmount);
+    // puplitPage.widgetTopUpRegulationCheckbox.click();
+    puplitPage.widgetTopUpButton.click();
+    // await page.locator("#widget_1_topup_receiver").selectOption(expectedTopUpReceiver);
+    // await page.locator("#widget_1_topup_amount").fill(topUpAmount);
     await page.getByText("zapoznałem się z regulaminem").click();
-    await page.getByRole("button", { name: "doładuj telefon" }).click();
+    // await page.getByRole("button", { name: "doładuj telefon" }).click();
 
     // Assert
     // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
