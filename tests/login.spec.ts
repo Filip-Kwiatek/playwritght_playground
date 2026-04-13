@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { loginData } from "../test-data/login.data";
 import { LoginPage } from "../pages/login.page";
+import { PuplitPage } from "../pages/puplit.page";
 
 test.describe("User login to DemoBank", () => {
   test.beforeEach(async ({ page }) => {
@@ -22,7 +23,9 @@ test.describe("User login to DemoBank", () => {
     await page.getByTestId("user-name").click();
 
     // Assert
-    await expect(page.getByTestId("user-name")).toHaveText(expectedUserName);
+    const pulpitPage = new PuplitPage(page);
+
+    await expect(pulpitPage.userName).toHaveText(expectedUserName);
   });
 
   test("Unsuccessful login with invalid credentials - login too short", async ({

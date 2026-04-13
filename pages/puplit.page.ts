@@ -12,6 +12,10 @@ export class PuplitPage {
     widgetTopUpAmount: Locator
     widgetTopUpRegulationCheckbox: Locator;
     widgetTopUpButton: Locator;
+    
+    moneyValue: Locator;
+
+    userName: Locator;
 
   constructor(private page: Page) {
     this.transferReceiver = this.page.locator("#widget_1_transfer_receiver");
@@ -23,7 +27,11 @@ export class PuplitPage {
 
     this.widgetTopUpReceiver = this.page.locator("#widget_1_topup_receiver");
     this.widgetTopUpAmount = this.page.locator("#widget_1_topup_amount");
-    this.widgetTopUpRegulationCheckbox = this.page.getByText("zapoznałem się z regulaminem");
+    this.widgetTopUpRegulationCheckbox = this.page.locator("#uniform-widget_1_topup_agreement span");
     this.widgetTopUpButton = this.page.getByRole("button", { name: "doładuj telefon" });
+
+    this.moneyValue = this.page.locator("#money_value");
+
+    this.userName = this.page.getByTestId("user-name");
   }
 }

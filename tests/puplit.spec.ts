@@ -15,7 +15,7 @@ test.describe("Puplit test", () => {
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
   });
-  test.only("quick payment with correct data", async ({ page }) => {
+  test("quick payment with correct data", async ({ page }) => {
     //Arrange
     const receiverId = "2";
     const transferAmount = "120";
@@ -32,7 +32,9 @@ test.describe("Puplit test", () => {
     await puplitPage.closeButton.click();
 
     // Assert
-    await expect(puplitPage.textShowMessages).toHaveText(`Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,);
+    await expect(puplitPage.textShowMessages).toHaveText(
+      `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,
+    );
     // await expect(page.getByRole("link", { name: "Przelew wykonany! Chuck" })).toBeVisible();
   });
   test("successful mobile top-up with correct data", async ({ page }) => {
@@ -43,41 +45,39 @@ test.describe("Puplit test", () => {
 
     // Act
     const puplitPage = new PuplitPage(page);
-    puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
-    puplitPage.widgetTopUpAmount.fill(topUpAmount);
-    // puplitPage.widgetTopUpRegulationCheckbox.click();
-    puplitPage.widgetTopUpButton.click();
-    // await page.locator("#widget_1_topup_receiver").selectOption(expectedTopUpReceiver);
-    // await page.locator("#widget_1_topup_amount").fill(topUpAmount);
-    await page.getByText("zapoznałem się z regulaminem").click();
-    // await page.getByRole("button", { name: "doładuj telefon" }).click();
+    await puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
+    await puplitPage.widgetTopUpAmount.fill(topUpAmount);
+    await puplitPage.widgetTopUpRegulationCheckbox.click();
+    await puplitPage.widgetTopUpButton.click();
 
     // Assert
-    // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
-    await expect(page.locator("#show_messages")).toHaveText(expectedMessage);
-    await page.getByTestId("close-button").click();
+    await expect(puplitPage.textShowMessages).toHaveText(expectedMessage);
+    await puplitPage.closeButton.click();
   });
 
   test("correct balance after successful mobile top-up with correct data", async ({
     page,
   }) => {
     // Arrange
+    const puplitPage = new PuplitPage(page);
     const expectedTopUpReceiver = "500 xxx xxx";
     const topUpAmount = "40";
-    const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
-    const initialBalance = await page.locator("#money_value").innerText();
+    const initialBalance = await puplitPage.moneyValue.innerText();
     const expectedBalance = Number(initialBalance) - Number(topUpAmount);
     // Act
-    await page
-      .locator("#widget_1_topup_receiver")
-      .selectOption(expectedTopUpReceiver);
-    await page.locator("#widget_1_topup_amount").fill(topUpAmount);
-    await page.getByText("zapoznałem się z regulaminem").click();
-    await page.getByRole("button", { name: "doładuj telefon" }).click();
+
+    await puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
+    await puplitPage.widgetTopUpAmount.fill(topUpAmount);
+    await puplitPage.widgetTopUpRegulationCheckbox.click();
+    await puplitPage.widgetTopUpButton.click();
+    // await page.locator("#widget_1_topup_receiver").selectOption(expectedTopUpReceiver);
+    // await page.locator("#widget_1_topup_amount").fill(topUpAmount);
+    // await page.getByText("zapoznałem się z regulaminem").click();
+    // await page.getByRole("button", { name: "doładuj telefon" }).click();
 
     // Assert
     // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
-    await expect(page.locator("#money_value")).toHaveText(`${expectedBalance}`);
-    await page.getByTestId("close-button").click();
+    await expect(puplitPage.moneyValue).toHaveText(`${expectedBalance}`);
+    await puplitPage.closeButton.click();
   });
 });
