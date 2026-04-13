@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { loginData } from "../test-data/login.data";
 import { LoginPage } from "../pages/login.page";
 import { PaymentPage } from "../pages/payment.page";
+import { PuplitPage } from "../pages/puplit.page";
 
 test.describe("Payment test", () => {
   test.beforeEach(async ({ page }) => {
@@ -14,7 +15,9 @@ test.describe("Payment test", () => {
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(userPassword);
     await loginPage.loginButton.click();
-    await page.getByRole("link", { name: "płatności" }).click();
+
+    const puplitPage = new PuplitPage(page);
+    await puplitPage.sideMenu.paymentButton.click();
   });
   test("simple payment", async ({ page }) => {
     // Arrange
@@ -27,7 +30,7 @@ test.describe("Payment test", () => {
     await paymentPage.transferReceiver.fill(exportReceiver);
     await paymentPage.transferAccount.fill(transferAccount);
     await paymentPage.transferAmount.fill(transferAmount);
-    await paymentPage.paymentButton.click();
+    await paymentPage.paymentButtonTransfer.click();
     await paymentPage.paymentCloseButton.click();
 
     // Assert
