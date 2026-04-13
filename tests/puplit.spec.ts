@@ -4,6 +4,7 @@ import { LoginPage } from "../pages/login.page";
 import { PuplitPage } from "../pages/puplit.page";
 
 test.describe("Puplit test", () => {
+  let puplitPage: PuplitPage;
   test.beforeEach(async ({ page }) => {
     const userId = loginData.userId;
     const userPassword = loginData.userPassword;
@@ -11,9 +12,9 @@ test.describe("Puplit test", () => {
     await page.goto("/");
 
     const loginPage = new LoginPage(page);
-    await loginPage.loginInput.fill(userId);
-    await loginPage.passwordInput.fill(userPassword);
-    await loginPage.loginButton.click();
+    await loginPage.login(userId, userPassword);
+
+    puplitPage = new PuplitPage(page);
   });
   test("quick payment with correct data", async ({ page }) => {
     //Arrange
@@ -23,7 +24,6 @@ test.describe("Puplit test", () => {
     const expectedTransferReceiver = "Chuck Demobankowy";
 
     // Act
-    const puplitPage = new PuplitPage(page);
     await puplitPage.transferReceiver.selectOption(receiverId);
     await puplitPage.transferAmount.fill(transferAmount);
     await puplitPage.transferTitle.fill(transferTitle);
@@ -44,7 +44,6 @@ test.describe("Puplit test", () => {
     const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
 
     // Act
-    const puplitPage = new PuplitPage(page);
     await puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
     await puplitPage.widgetTopUpAmount.fill(topUpAmount);
     await puplitPage.widgetTopUpRegulationCheckbox.click();
@@ -59,7 +58,6 @@ test.describe("Puplit test", () => {
     page,
   }) => {
     // Arrange
-    const puplitPage = new PuplitPage(page);
     const expectedTopUpReceiver = "500 xxx xxx";
     const topUpAmount = "40";
     const initialBalance = await puplitPage.moneyValue.innerText();
@@ -70,13 +68,8 @@ test.describe("Puplit test", () => {
     await puplitPage.widgetTopUpAmount.fill(topUpAmount);
     await puplitPage.widgetTopUpRegulationCheckbox.click();
     await puplitPage.widgetTopUpButton.click();
-    // await page.locator("#widget_1_topup_receiver").selectOption(expectedTopUpReceiver);
-    // await page.locator("#widget_1_topup_amount").fill(topUpAmount);
-    // await page.getByText("zapoznałem się z regulaminem").click();
-    // await page.getByRole("button", { name: "doładuj telefon" }).click();
 
     // Assert
-    // await expect(page.getByRole('link', { name: 'Doładowanie wykonane! 40,00PLN na numer 500 xxx xxx' })).toBeVisible();
     await expect(puplitPage.moneyValue).toHaveText(`${expectedBalance}`);
     await puplitPage.closeButton.click();
   });
