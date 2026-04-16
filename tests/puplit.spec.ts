@@ -24,12 +24,7 @@ test.describe("Puplit test", () => {
     const expectedTransferReceiver = "Chuck Demobankowy";
 
     // Act
-    await puplitPage.transferReceiver.selectOption(receiverId);
-    await puplitPage.transferAmount.fill(transferAmount);
-    await puplitPage.transferTitle.fill(transferTitle);
-
-    await puplitPage.executreTransferButton.click();
-    await puplitPage.closeButton.click();
+    await puplitPage.quickPaymentWithCorrectData(receiverId, transferAmount, transferTitle);
 
     // Assert
     await expect(puplitPage.textShowMessages).toHaveText(
@@ -44,10 +39,7 @@ test.describe("Puplit test", () => {
     const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
 
     // Act
-    await puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
-    await puplitPage.widgetTopUpAmount.fill(topUpAmount);
-    await puplitPage.widgetTopUpRegulationCheckbox.click();
-    await puplitPage.widgetTopUpButton.click();
+    await puplitPage.successfulMobileTopUp(expectedTopUpReceiver, topUpAmount);
 
     // Assert
     await expect(puplitPage.textShowMessages).toHaveText(expectedMessage);
@@ -64,10 +56,7 @@ test.describe("Puplit test", () => {
     const expectedBalance = Number(initialBalance) - Number(topUpAmount);
     // Act
 
-    await puplitPage.widgetTopUpReceiver.selectOption(expectedTopUpReceiver);
-    await puplitPage.widgetTopUpAmount.fill(topUpAmount);
-    await puplitPage.widgetTopUpRegulationCheckbox.click();
-    await puplitPage.widgetTopUpButton.click();
+    await puplitPage.successfulMobileTopUp(expectedTopUpReceiver, topUpAmount);
 
     // Assert
     await expect(puplitPage.moneyValue).toHaveText(`${expectedBalance}`);
