@@ -19,7 +19,6 @@ test.describe("Payment test", () => {
     await puplitPage.sideMenu.paymentButton.click();
 
     paymentPage = new PaymentPage(page);
-
   });
   test("simple payment", async ({ page }) => {
     // Arrange
@@ -28,11 +27,11 @@ test.describe("Payment test", () => {
     const transferAmount = "222";
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${exportReceiver}`;
     // Act
-    await paymentPage.transferReceiver.fill(exportReceiver);
-    await paymentPage.transferAccount.fill(transferAccount);
-    await paymentPage.transferAmount.fill(transferAmount);
-    await paymentPage.paymentButtonTransfer.click();
-    await paymentPage.paymentCloseButton.click();
+    await paymentPage.makeTransfer(
+      exportReceiver,
+      transferAccount,
+      transferAmount,
+    );
 
     // Assert
     await expect(paymentPage.paymentText).toHaveText(expectedMessage);
