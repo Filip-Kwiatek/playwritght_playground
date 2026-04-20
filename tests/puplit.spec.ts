@@ -16,50 +16,70 @@ test.describe("Puplit test", () => {
 
     puplitPage = new PuplitPage(page);
   });
-  test("quick payment with correct data", async ({ page }) => {
-    //Arrange
-    const receiverId = "2";
-    const transferAmount = "120";
-    const transferTitle = "szmeks";
-    const expectedTransferReceiver = "Chuck Demobankowy";
+  test(
+    "quick payment with correct data",
+    { tag: ["@puplit", "@integration"] },
+    async ({ page }) => {
+      //Arrange
+      const receiverId = "2";
+      const transferAmount = "120";
+      const transferTitle = "szmeks";
+      const expectedTransferReceiver = "Chuck Demobankowy";
 
-    // Act
-    await puplitPage.quickPaymentWithCorrectData(receiverId, transferAmount, transferTitle);
+      // Act
+      await puplitPage.quickPaymentWithCorrectData(
+        receiverId,
+        transferAmount,
+        transferTitle,
+      );
 
-    // Assert
-    await expect(puplitPage.textShowMessages).toHaveText(
-      `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,
-    );
-    // await expect(page.getByRole("link", { name: "Przelew wykonany! Chuck" })).toBeVisible();
-  });
-  test("successful mobile top-up with correct data", async ({ page }) => {
-    // Arrange
-    const expectedTopUpReceiver = "500 xxx xxx";
-    const topUpAmount = "40";
-    const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
+      // Assert
+      await expect(puplitPage.textShowMessages).toHaveText(
+        `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,
+      );
+      // await expect(page.getByRole("link", { name: "Przelew wykonany! Chuck" })).toBeVisible();
+    },
+  );
+  test(
+    "successful mobile top-up with correct data",
+    { tag: ["@puplit", "@integration"] },
+    async ({ page }) => {
+      // Arrange
+      const expectedTopUpReceiver = "500 xxx xxx";
+      const topUpAmount = "40";
+      const expectedMessage = `Doładowanie wykonane! ${topUpAmount},00PLN na numer ${expectedTopUpReceiver}`;
 
-    // Act
-    await puplitPage.successfulMobileTopUp(expectedTopUpReceiver, topUpAmount);
+      // Act
+      await puplitPage.successfulMobileTopUp(
+        expectedTopUpReceiver,
+        topUpAmount,
+      );
 
-    // Assert
-    await expect(puplitPage.textShowMessages).toHaveText(expectedMessage);
-    await puplitPage.closeButton.click();
-  });
+      // Assert
+      await expect(puplitPage.textShowMessages).toHaveText(expectedMessage);
+      await puplitPage.closeButton.click();
+    },
+  );
 
-  test("correct balance after successful mobile top-up with correct data", async ({
-    page,
-  }) => {
-    // Arrange
-    const expectedTopUpReceiver = "500 xxx xxx";
-    const topUpAmount = "40";
-    const initialBalance = await puplitPage.moneyValue.innerText();
-    const expectedBalance = Number(initialBalance) - Number(topUpAmount);
-    // Act
+  test(
+    "correct balance after successful mobile top-up with correct data",
+    { tag: ["@puplit", "@integration"] },
+    async ({ page }) => {
+      // Arrange
+      const expectedTopUpReceiver = "500 xxx xxx";
+      const topUpAmount = "40";
+      const initialBalance = await puplitPage.moneyValue.innerText();
+      const expectedBalance = Number(initialBalance) - Number(topUpAmount);
+      // Act
 
-    await puplitPage.successfulMobileTopUp(expectedTopUpReceiver, topUpAmount);
+      await puplitPage.successfulMobileTopUp(
+        expectedTopUpReceiver,
+        topUpAmount,
+      );
 
-    // Assert
-    await expect(puplitPage.moneyValue).toHaveText(`${expectedBalance}`);
-    await puplitPage.closeButton.click();
-  });
+      // Assert
+      await expect(puplitPage.moneyValue).toHaveText(`${expectedBalance}`);
+      await puplitPage.closeButton.click();
+    },
+  );
 });

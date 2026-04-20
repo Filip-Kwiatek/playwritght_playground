@@ -20,20 +20,24 @@ test.describe("Payment test", () => {
 
     paymentPage = new PaymentPage(page);
   });
-  test("simple payment", async ({ page }) => {
-    // Arrange
-    const exportReceiver = "Jan Nowak";
-    const transferAccount = "12 3456 7890 1234 5678 9012 34568";
-    const transferAmount = "222";
-    const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${exportReceiver}`;
-    // Act
-    await paymentPage.makeTransfer(
-      exportReceiver,
-      transferAccount,
-      transferAmount,
-    );
+  test(
+    "simple payment",
+    { tag: ["@payment", "@integration"] },
+    async ({ page }) => {
+      // Arrange
+      const exportReceiver = "Jan Nowak";
+      const transferAccount = "12 3456 7890 1234 5678 9012 34568";
+      const transferAmount = "222";
+      const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla ${exportReceiver}`;
+      // Act
+      await paymentPage.makeTransfer(
+        exportReceiver,
+        transferAccount,
+        transferAmount,
+      );
 
-    // Assert
-    await expect(paymentPage.paymentText).toHaveText(expectedMessage);
-  });
+      // Assert
+      await expect(paymentPage.paymentText).toHaveText(expectedMessage);
+    },
+  );
 });

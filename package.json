@@ -8,7 +8,8 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:watch": "playwright test --watch",
-    "test:puplit:headed": "npm run test tests/puplit.spec.ts -- --headed"
+    "test:puplit:headed": "npm run test tests/puplit.spec.ts -- --headed",
+    "test:login": "npx playwright test --grep \"@login\""
   },
   "keywords": [],
   "author": "",
