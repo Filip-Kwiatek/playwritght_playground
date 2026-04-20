@@ -12,7 +12,13 @@ test.describe("User login to DemoBank", () => {
 
   test(
     "Successful login with valid credentials",
-    { tag: ["@login", "@smoke"] },
+    {
+      tag: ["@login", "@smoke"],
+      annotation: {
+        type: "Happy path",
+        description: "Basic happy test for login",
+      },
+    },
     async ({ page }) => {
       //Arrange
       const userId = loginData.userId;

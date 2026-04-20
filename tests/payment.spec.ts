@@ -22,7 +22,13 @@ test.describe("Payment test", () => {
   });
   test(
     "simple payment",
-    { tag: ["@payment", "@integration"] },
+    {
+      tag: ["@payment", "@integration"],
+      annotation: {
+        type: "documentation",
+        description: "https://demo-bank.vercel.app/index.html",
+      },
+    },
     async ({ page }) => {
       // Arrange
       const exportReceiver = "Jan Nowak";
