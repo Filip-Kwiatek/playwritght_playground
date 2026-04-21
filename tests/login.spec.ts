@@ -39,7 +39,7 @@ test.describe("User login to DemoBank", () => {
 
   test(
     "Unsuccessful login with invalid credentials - login too short",
-    { tag: ["@login", "@unhappypath"] },
+    { tag: ["@login", "@unhappy_path"] },
     async ({ page }) => {
       // Arrange
       const url = "https://demo-bank.vercel.app/index.html";
@@ -58,7 +58,7 @@ test.describe("User login to DemoBank", () => {
 
   test(
     "Unsuccessful login with invalid credentials - password too short",
-    { tag: ["@login", "@unhappypath"] },
+    { tag: ["@login", "@unhappy_path"] },
     async ({ page }) => {
       // Arrange
       const userId = loginData.userId;
